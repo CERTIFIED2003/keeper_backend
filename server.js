@@ -2,7 +2,8 @@
 require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./config/db");
+const mongoose = require("mongoose");
+// const connectDB = require("./config/db");
 
 // initializing express 
 const app = express();
@@ -11,7 +12,7 @@ const app = express();
 const keep = require('./routers/keep');
 
 // connectDB
-connectDB();
+// connectDB();
 
 // cors
 app.use(cors({origin:true, credentials:true}));
@@ -28,7 +29,14 @@ app.get("/", (req, res) => {
 app.use("/api/keep", keep);
 
 
-
+mongoose.set('strictQuery', false);
+mongoose.connect(
+  process.env.MONGODB_URI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => {
+    console.log('Connected to MongoDB');
+  }
+);
 
 
 // setting up the port
